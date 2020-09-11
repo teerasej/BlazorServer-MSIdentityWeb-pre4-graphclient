@@ -1,0 +1,29 @@
+@page "/counter"
+
+@using Microsoft.Identity.Web
+@using Microsoft.Graph
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
+@inject GraphServiceClient graphClient
+
+<h1>Counter</h1>
+
+<p>Username: @displayName</p>
+
+
+@code {
+    private string displayName;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+           
+            var me = graphClient.Me.Request().GetAsync().Result;
+            displayName = me.DisplayName;
+        }
+        catch (Exception ex)
+        {
+            ConsentHandler.HandleException(ex);
+        }
+
+    }
+}
